@@ -22,7 +22,7 @@ def merge_poly(poly1,poly2):
     # Get the points from the polygons
     points1 = poly1.get_points()
     points2 = poly2.get_points()
-
+    
     # Combine the points
     points = points1 + points2
 
@@ -30,35 +30,5 @@ def merge_poly(poly1,poly2):
     merged_polygon = Polygon(data = points, xcol = 0, ycol = 1)
 
     return merged_polygon
-
-# Test the function
-if __name__ == "__main__":
-    poly1 = Polygon(data = [(0,0),(0,1),(1,1),(1,0),(0,0)], xcol = 0, ycol = 1)
-    poly2 = Polygon(data = [(0.5,0.5),(0.5,1.5),(1.5,1.5),(1.5,0.5),(0.5,0.5)], xcol = 0, ycol = 1)
-    merged_poly = merge_poly(poly1,poly2)
-    print(merged_poly.get_points())
-    print(merged_poly.get_area())
-    merged_poly.plot()
-    
-    poly1 = Polygon(data = [(0,0),(0,1),(1,1),(1,0),(0,0)], xcol = 0, ycol = 1)
-    poly2 = Polygon(data = [(0.5,0.5),(0.5,1.5),(1.5,1.5),(1.5,0.5),(0.5,0.5)], xcol = 0, ycol = 1)
-    merged_poly = merge_poly(poly1,poly2)
-    print(merged_poly.get_points())
-    print(merged_poly.get_area())
-    merged_poly.plot()
-    
-    poly1 = Polygon(data = [(0,0),(0,1),(1,1),(1,0),(0,0)], xcol = 0, ycol = 1)
-    poly2 = Polygon(data = [(0.5,0.5),(0.5,1.5),(1.5,1.5),(1.5,0.5),(0.5,0.5)], xcol = 0, ycol = 1)
-    merged_poly = merge_poly(poly1,poly2)
-    print(merged_poly.get_points())
-    print(merged_poly.get_area())
-    merged_poly.plot()
-    
-    poly1 = Polygon(data = [(0,0),(0,1),(1,1),(1,0),(0,0)], xcol = 0, ycol = 1)
-    poly2 = Polygon(data = [(0.5,0.5),(0.5,1.5),(1.5,1.5),(1.5,0.5),(0.5,0.5)], xcol = 0, ycol = 1)
-    merged_poly = merge_poly(poly1,poly2)
-    print(merged_poly.get_points())
-    print(merged_poly.get_area())
-    merged_poly.plot()
     
 

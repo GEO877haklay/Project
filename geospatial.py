@@ -314,3 +314,7 @@ class Polygon(PointGroup):
             return False           
 
         return True
+
+    # Just a method that returns the list of points
+    def get_points(self):
+        return self.points
