@@ -1,18 +1,37 @@
 from geospatial import *
 import numpy as np
 
-#implement the cyrus_beck line clipping algorithm
-
-#define a dot product function
 def dot(p0, p1):
+    """
+    Dot product function for the poly_line_clip function.
+
+    :attrib p0:
+        point with xy-coordinates as list or tuple
+    :attrib p1:
+        point with xy-coordinates as list or tuple
+    :returns:
+        dot product of the two points
+    """
     return p0[0] * p1[0] + p0[1] * p1[1]
 
-# implement cyrus beck (NEEDS POLYGON WITH ANTICLOCKWISE ORDERED VERTICES!)
-# should be working now with parallel lines of an edge of the poly that are outside
-# but had to add the 0.0001 so the solution is not 100% accurate
-# --> todo: implement check for left turns of polygon edges, and reordering of
-# vertices if clockwise polygon inserted
+
 def poly_line_clip(polygon, segment):
+    """
+    Clips a segment using a polygon overlay. Note, that since the
+    algorithm is unable to deal with lines, that are parallel to edges
+    of the polygon, the result is slightly inaccurate by introducing an
+    artificial offset of 0.0001 crs units to one of the segment points.
+
+    :attrib polygon:
+        Polygon object with which the segment should be
+        clipped, needs to be ordered anticlockwise (not checked,
+        will return false result if not adhered to)
+    :attrib segment:
+        Segment object that is to be clipped
+    :returns:
+        the clipped segment as Segment object from geospatial
+        class
+    """
     n = len(polygon.points)
     P1_P0 = (segment.end.x + 0.0001 - segment.start.x, segment.end.y - segment.start.y)
     normal = [(polygon.points[i].y - polygon.points[(i+1) % n].y, polygon.points[(i+1) % n].x - polygon.points[i].x) for i in range(n)]

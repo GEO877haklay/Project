@@ -79,7 +79,7 @@ class Point():
         # -ve: this point is on the left side of a line connecting p1 and p2
         #   0: this point is collinear
         # +ve: this point is on the right side of the line
-        side = int(self.__det(p1, p2))
+        side = self.__det(p1, p2)
         if side != 0:
             side = side/abs(side)  # will return 0 if collinear, -1 for left, 1 for right
         return side
@@ -105,7 +105,7 @@ class Segment():
             # We need this method so that the class will behave sensibly in sets and dictionaries
     
     def __hash__(self):
-        return hash((start.start.x, self.start.y,self.end.x, self.end.y))    
+        return hash((self.start.x, self.start.y,self.end.x, self.end.y))    
         
     # determine if intersects with another segment (using Point method leftRight)
     # - should we incorporate testing for identical segments and non-zero lengths?
@@ -172,7 +172,7 @@ class Bbox():
             # We need this method so that the class will behave sensibly in sets and dictionaries
     
     def __hash__(self):
-        return hash(self.ll, other.ur)  
+        return hash(self.ll, self.ur)  
         
     # test for overlap between two bounding boxes
     def intersects(self, other):       

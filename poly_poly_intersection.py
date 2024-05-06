@@ -3,6 +3,20 @@ from poly_line_clip import *
 
 
 def poly_poly_intersection(poly1, poly2):
+    """
+    Returns the intersection between two polygons as new polygon.
+
+    :attrib poly1:
+        first Polygon object for the intersection, needs to 
+        be ordered anticlockwise (not checked, will return 
+        false result if not adhered to)
+    :attrib poly2:
+        second Polygon object for the intersection, needs to 
+        be ordered anticlockwise (not checked, will return 
+        false result if not adhered to)
+    :returns:
+        the intersection result as Polygon object
+    """
     #check for bounding box overlap:
     if poly1.bbox.intersects(poly2.bbox) == False:
         return None
