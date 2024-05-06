@@ -80,7 +80,7 @@ def rect_rect_clip(poly1, poly2):
         rectangular Polygon object from geospatial class
     :returns:
         clipped area shared between the two input Polygons
-        as a Polygon object from geospatial class
+        as a Polygon object (anticlockwise ordered) from geospatial class
     """
     #check for bbox overlap
     if not poly1.bbox.intersects(poly2.bbox):
