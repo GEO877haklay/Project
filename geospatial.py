@@ -318,3 +318,28 @@ class Polygon(PointGroup):
     # Just a method that returns the list of points
     def get_points(self):
         return self.points
+    
+    def merge_poly(self, poly2):
+        """
+        Merges two polygons into one Polygon object. The polygons are assumed to overlap.
+        The overlapped area will therefore only be counted once in the result.
+        So the function should take all the points in the polygons and create the convex hull of the points.
+        The convex hull is then the merged polygon. 
+        The points will need to be ordered in a clockwise manner and unnecessary points should be removed.
+
+        :attrib poly1:
+            the first polygon as Polygon object from geospatial class
+        :attrib poly2:
+            the second polygon as Polygon object from geospatial class
+        :returns:
+            the merged polygon as Polygon object from geospatial class  
+
+        """
+        list_points = []
+        for p in self.points:
+            list_points.append([p.x, p.y])
+        for p in poly2.points:
+            list_points.append([p.x, p.y])
+        merged_polygon = Polygon(data = list_points, xcol = 0, ycol = 1)
+        merged_polygon.removeDuplicates()
+        return merged_polygon

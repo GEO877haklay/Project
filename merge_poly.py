@@ -1,5 +1,12 @@
 from geospatial import *
 import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+
+#Ignore this file, it is just for testing purposes
+
 
 
 def merge_poly(poly1,poly2):
@@ -32,3 +39,9 @@ def merge_poly(poly1,poly2):
     return merged_polygon
     
 
+# Run the function with two simple polygons
+poly1 = Polygon(data = [[0,0],[0,1],[1,1],[1,0]], xcol = 0, ycol = 1)
+poly2 = Polygon(data = [[0.5,0.5],[0.5,1.5],[1.5,1.5],[1.5,0.5]], xcol = 0, ycol = 1)
+
+test = poly1.merge_poly(poly2)
+print(test.get_points())
