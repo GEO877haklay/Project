@@ -1,6 +1,7 @@
 #%% imports
 from geospatial import *
 from poly_line_clip import *
+from poly_poly_intersection import *
 from rect_rect_clip import *
 from buffer_segment import *
 import matplotlib.pyplot as plt
@@ -66,7 +67,7 @@ plt.show()
 # %%
 clipped_segments = []
 for seg in segments:
-    clipped_segments.append(poly_line_clip(poly1, seg))
+    clipped_segments.append(poly_line_clip(polygon, seg))
 
 for seg in clipped_segments:
     if seg is not None:
