@@ -101,6 +101,10 @@ def rect_rect_clip(poly1, poly2):
     # add intersection points to list
     all_points = all_points + rect_rect_intersection(poly1, poly2)
 
+    #check for any overlap
+    if len(all_points)==0:
+        return None
+
     # calculate center of points
     cx = all_points[0].x
     cy = all_points[0].y

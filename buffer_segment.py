@@ -57,6 +57,6 @@ def buffer_segment(segment, buffer_distance, extension_distance = 0):
     buffer_lr = (buffer_lr[0] + px * extension_distance, buffer_lr[1] + py * extension_distance)
     
     # Define clockwise ordered coordinates
-    buffer_polygon = Polygon(data = [buffer_ll,buffer_ul,buffer_ur,buffer_lr, buffer_ll], xcol = 0, ycol = 1)
+    buffer_polygon = Polygon(data = [buffer_ll,buffer_lr,buffer_ur,buffer_ul, buffer_ll], xcol = 0, ycol = 1)
     
     return buffer_polygon

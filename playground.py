@@ -1,9 +1,11 @@
 #%% imports
 from geospatial import *
 from poly_line_clip import *
-from poly_poly_intersection import *
+from rect_rect_clip import *
+from buffer_segment import *
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 
 
@@ -187,4 +189,134 @@ plt.plot(xs1, ys1, linestyle='dashed')
 plt.plot(xs4, ys4, linestyle='dashed')
 plt.plot(xs5, ys5, linestyle='dashed')
 plt.show()
+# %% for presentation
+def load_segments_from_geojson(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    segments = []
+    for feature in data['features']:
+        coords = feature['geometry']['coordinates']
+        if isinstance(coords[0], list):
+            if isinstance(coords[0][0], list):
+                for subcoords in coords:
+                    for i in range(len(subcoords) - 1):
+                        p1 = Point(subcoords[i][0], subcoords[i][1])
+                        p2 = Point(subcoords[i + 1][0], subcoords[i + 1][1])
+                        segments.append(Segment(p1, p2))
+            else:
+                for i in range(len(coords) - 1):
+                    p1 = Point(coords[i][0], coords[i][1])
+                    p2 = Point(coords[i + 1][0], coords[i + 1][1])
+                    segments.append(Segment(p1, p2))
+        else:
+            p1 = Point(coords[0], coords[1])
+            p2 = Point(coords[2], coords[3])
+            segments.append(Segment(p1, p2))
+    return segments
+
+motorways_osm = load_segments_from_geojson(r'S:\course\geo877\student\haklay\data\geojson\zurich\osm'+'/motorway_zh_osm.geojson')
+motorways_top = load_segments_from_geojson(r'S:\course\geo877\student\haklay\data\geojson\zurich\swisstopo'+'/motorway_zh_swisstopo.geojson')
+aoi = Polygon([[2.677*1e6,1.243*1e6],[2.679*1e6,1.243*1e6],[2.679*1e6,1.245*1e6],[2.677*1e6,1.245*1e6],[2.677*1e6,1.243*1e6]], xcol=0,ycol=1)
+motorways_osm_clipped = []
+motorways_top_clipped = []
+for motorway in motorways_osm:
+    clipped_segment = poly_line_clip(aoi,motorway)
+    if clipped_segment is not None:
+        motorways_osm_clipped.append(clipped_segment)
+for motorway in motorways_top:
+    clipped_segment = poly_line_clip(aoi,motorway)
+    if clipped_segment is not None:
+        motorways_top_clipped.append(clipped_segment)
+
+#%% plotting motorways
+fig = plt.figure(figsize=(20,20))
+for seg in motorways_osm_clipped:
+    x = [seg.start.x, seg.end.x]
+    y = [seg.start.y, seg.end.y]
+    plt.plot(x,y, color='Green')
+for seg in motorways_top_clipped:
+    x = [seg.start.x, seg.end.x]
+    y = [seg.start.y, seg.end.y]
+    plt.plot(x,y, color='Red')
+plt.show()
+
+# %% buffered motorways
+def buffer_segments(segments, buffer_distance):
+    buffered_segments = []
+    for seg in segments:
+        buffered_seg = buffer_segment(seg, buffer_distance)
+        buffered_segments.append(buffered_seg)
+    return buffered_segments
+
+motorways_osm_clipped_buffer = buffer_segments(motorways_osm_clipped,10)
+motorways_top_clipped_buffer = buffer_segments(motorways_top_clipped,10)
+
+#%% plot buffered motorways
+fig = plt.figure(figsize=(20,20))
+for seg in motorways_osm_clipped:
+    x = [seg.start.x, seg.end.x]
+    y = [seg.start.y, seg.end.y]
+    plt.plot(x,y, color='Green')
+for seg in motorways_top_clipped:
+    x = [seg.start.x, seg.end.x]
+    y = [seg.start.y, seg.end.y]
+    plt.plot(x,y, color='Red')
+
+for poly in motorways_osm_clipped_buffer:
+    xs = [i.x for i in poly]
+    ys = [i.y for i in poly]
+    plt.plot(xs,ys, color = 'Green')
+
+for poly in motorways_top_clipped_buffer:
+    xs = [i.x for i in poly]
+    ys = [i.y for i in poly]
+    plt.plot(xs,ys, color = 'Red')
+
+
+plt.show()
+
+#%% Intersection Polygons
+intersecting_buffers = []
+for buffer_osm in motorways_osm_clipped_buffer:
+    for buffer_top in motorways_top_clipped_buffer:
+        intersection = rect_rect_clip(buffer_osm,buffer_top)
+        if intersection is not None:
+            intersecting_buffers.append(intersection)
+
+# %% plot buffered motorways with intersecting buffers
+fig = plt.figure(figsize=(20,20))
+
+
+for poly in motorways_osm_clipped_buffer:
+    xs = [i.x for i in poly]
+    ys = [i.y for i in poly]
+    plt.plot(xs,ys, color = 'Green')
+
+for poly in motorways_top_clipped_buffer:
+    xs = [i.x for i in poly]
+    ys = [i.y for i in poly]
+    plt.plot(xs,ys, color = 'Red')
+
+for poly in intersecting_buffers:
+    xs = [i.x for i in poly]
+    ys = [i.y for i in poly]
+    plt.plot(xs,ys, color = 'Purple')
+
+plt.show()
+
+# %% intersect overlapping buffer intersections
+overlaping_buffer_intersections = []
+for i in range(len(intersecting_buffers)):
+    for j in range(len(intersecting_buffers)):
+        if i != j:
+            intersection = rect_rect_clip(intersecting_buffers[i],intersecting_buffers[j])
+            if intersection is not None:
+                overlaping_buffer_intersections.append(intersection)
+
+#%% test poly contains point
+poly = Polygon([[0,0],[5,5],[3,7],[-2,2],[0,0]],xcol=0,ycol=1)
+point = Point(-2,2)
+
+poly.containsPoint(point)
+
 # %%
